@@ -11,10 +11,13 @@ Comme pour l'exercice précédent, j'attends que vous utilisez impérativement l
 J'attends un code propre et bien découpé, c'est à dire pas une fonction de 500 lignes qui gère toute l'application.
 
 
-## ⚠️Attention
+
+## ⚠️ Attention
 
 Les librairies telles que jQuery ou les packages NPM ne sont pas autorisés.
+
 Il est facile de retrouver un code tout fait sur l'internet, mais si vous l'avez trouvé, partez du principe que je saurai le retrouver également.
+
 
 
 ## ⭐️ Les petits Bonus
@@ -24,21 +27,27 @@ Il est facile de retrouver un code tout fait sur l'internet, mais si vous l'avez
 * Pouvoir sauvegarder son nombre de victoire (si même pseudo utilisé) dans un scoreboad (localStorage)
 
 
-## ⭐️Les HUGE Bonus
+
+## ⭐️ Les HUGE Bonus
 	
 * Pouvoir générer une grille de X par X cases jouable
 * Pouvoir jouer contre IA qui essaye de contrer vos coups/de gagner
 
 
-## 💾 Format de rendu :
+
+## 💾 Format de rendu
 
 PRENOM_NOM_TIC.zip (si plusieurs fichiers)
+
 PRENOM_NOM_TIC.html (si un seul fichier)
+
 Votre plus beau lien Github (recommandé)
+
 Rendu par MP via Teams.
 
 
-## ⏰Deadline, date de rendu :
+
+## ⏰ Deadline, date de rendu
 
 **Dimanche 27 septembre 23h59**
 pour le Typing Game et/ou le Tic Tac Toe, la meilleure des deux notes sera conservée mais vous aurez un retour perso sur les deux exercices.
