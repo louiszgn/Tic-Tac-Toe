@@ -1,0 +1,130 @@
+:root {
+  --primary-color: #808080;
+  --secondary-color: #505050;
+
+  --red: #FF6347;
+  --green: #41A317;
+  --white: #FFF;
+  --black: #2c2b31;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  background-color: var(--black);
+}
+
+/*********** Global ***********/
+.content {
+  visibility: hidden;
+  z-index: -9;
+}
+.content.show {
+  visibility: visible;
+  z-index: 9;
+}
+/*********** Fin Global ***********/
+
+/*********** Header ***********/
+#header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+#header h1 {
+  margin: 20px 0;
+}
+/*********** Fin Header ***********/
+
+/*********** Menu Content ***********/
+#menu-content {
+  width: 300px;
+}
+
+#menu-content > div:not(:last-child) {
+  margin-bottom: 25px;
+}
+
+#menu-content .players-number {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px;
+  background-color: var(--primary-color);
+  border-radius: 10px;
+}
+
+#menu-content .players-number div {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--white);
+  border-radius: 50%;
+  cursor: pointer;
+}
+#menu-content .players-number div.active {
+  background-color: var(--secondary-color);
+}
+
+#menu-content .players-names div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#menu-content .players-names div:not(:last-child) {
+  margin-bottom: 25px;
+}
+
+#menu-content .players-names div p {
+  margin-right: 10px;
+}
+
+#menu-content .players-names div input {
+  padding: 5px;
+  border: unset;
+  border-radius: 10px;
+}
+
+#menu-content .grid-size {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#menu-content .grid-size p {
+  margin-right: 10px;
+}
+
+#menu-content .start-btn {
+  width: 50%;
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 10px;
+  background-color: var(--green);
+  border-radius: 10px;
+  margin: auto;
+  cursor: pointer;
+}
+/*********** Fin Menu Content ***********/
+
+/*********** Game Content ***********/
+#game-content {
+
+}
+/*********** Fin Game Content ***********/
