@@ -57,6 +57,20 @@ body {
   margin-bottom: 25px;
 }
 
+#menu-content .reset-btn {
+  width: fit-content;
+  text-align: center;
+  padding: 7px 10px;
+  border: 1px solid var(--red);
+  border-radius: 10px;
+  margin: auto;
+  cursor: pointer;
+  transition: .5s;
+}
+#menu-content .reset-btn:hover {
+  background-color: var(--red);
+}
+
 #menu-content .players-number {
   display: flex;
   align-items: center;
