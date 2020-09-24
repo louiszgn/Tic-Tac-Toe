@@ -22,6 +22,13 @@ let isInGame = false;
 const menuContent = document.querySelector("#menu-content");
 const gameContent = document.querySelector("#game-content");
 
+/*********** Leaderboard ***********/
+
+
+document.querySelector("#header .leaderboard-btn").onclick = () => document.querySelector("#leaderboard").classList.toggle("show");
+document.querySelector("#leaderboard .close").onclick = () => document.querySelector("#leaderboard").classList.toggle("show");
+/*********** End Leaderboard ***********/
+
 /*********** Menu ***********/
 const reset = document.querySelector("#menu-content .reset-btn");
 const select1 = document.querySelector("#menu-content .select-1");
