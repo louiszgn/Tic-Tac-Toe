@@ -31,9 +31,14 @@ body {
   z-index: -9;
 }
 
-.show {
+.content.show {
   visibility: visible;
   z-index: 9;
+}
+
+#leaderboard.show {
+  visibility: visible;
+  z-index: 99;
 }
 /*********** Fin Global ***********/
 
@@ -96,7 +101,7 @@ body {
   cursor: pointer;
 }
 
-#leaderboard .leaderboard-content .content {
+#leaderboard .leaderboard-content .table {
   width: 100%;
   text-align: center;
   padding: 20px;
