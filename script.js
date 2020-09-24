@@ -5,7 +5,11 @@
 // Create matrice of the game (adapt to the size)
 // Create html of party
 // Get onclick by case
-
+localStorage.setItem('azdqsdq', '9');
+localStorage.setItem('dqsdz', '3');
+localStorage.setItem('Tom', '2');
+localStorage.setItem('efsdfsd', '40');
+localStorage.setItem('Tofdfm', '20');
 // IA
 // fc checkLine
 // fc checkColumn
@@ -19,8 +23,44 @@ let player1 = "";
 let player2 = "";
 let size = 3;
 let isInGame = false;
+let leaderboard = Object.keys(localStorage).map(key => { return {"name": key, "score": localStorage.getItem(key)} }).sort((a, b) => b.score - a.score);
 const menuContent = document.querySelector("#menu-content");
 const gameContent = document.querySelector("#game-content");
+
+/*********** Leaderboard ***********/
+const table = document.querySelector("#leaderboard .table");
+
+function updateLeaderboard(name, score) {
+  let position = (leaderboard.filter(player => parseInt(player.score) > parseInt(score)).length + 1) || 1;
+
+  let newRow = table.insertRow(position);
+  newRow.insertCell(0).appendChild(document.createTextNode(name));
+  newRow.insertCell(1).appendChild(document.createTextNode(score));
+}
+
+function pushToLeaderboard(name) {
+  // push to localstorage
+  if (localStorage.getItem(name)) {
+    let playerScore = parseInt(localStorage.getItem(name)) + 1;
+
+    localStorage.removeItem(name);
+    localStorage.setItem(name, playerScore);
+    leaderboard.find(player => player.name === name).score++;
+
+    table.querySelectorAll("tr").forEach(tr => {
+      if(tr.innerHTML.includes("<td>"+name+"</td>")) tr.innerHTML = "<td>"+name+"</td><td>"+playerScore+"</td>";
+    });
+  }
+  else {
+    localStorage.setItem(name, "1");
+    leaderboard.push({"name": name, "score": 1});
+    updateLeaderboard(name, 1);
+  }
+}
+
+document.querySelector("#header .leaderboard-btn").onclick = () => document.querySelector("#leaderboard").classList.toggle("show");
+document.querySelector("#leaderboard .close").onclick = () => document.querySelector("#leaderboard").classList.toggle("show");
+/*********** End Leaderboard ***********/
 
 /*********** Menu ***********/
 const reset = document.querySelector("#menu-content .reset-btn");
@@ -70,9 +110,11 @@ sizeRange.oninput = () => {
 }
 
 start.onclick = () => {
-  if (((multi && (player1Input.value.lenght > 1) && (player2Input.value.lenght > 1))|| (!multi && (player1Input.value.lenght > 1))) && (sizeRange.value >= 3)) {
+  if (((multi && (player1Input.value.lenght > 1) && (player2Input.value.lenght > 1)) || (!multi && (player1Input.value.lenght > 1))) && (sizeRange.value >= 3)) {
+    if (multi) player2 = player2Input.value;
+    else player2 = "TheBot";
+    
     player1 = player1Input.value;
-    player2 = player2Input.value;
     size = sizeRange.value;
     isInGame = true;
 
@@ -98,4 +140,7 @@ function checkIsInGame() {
 /*********** Onload ***********/
 setDatas();
 checkIsInGame();
+
+// Load the leaderboard
+for (player of leaderboard) updateLeaderboard(player.name, player.score);
 /*********** End Onload ***********/

@@ -25,13 +25,20 @@ body {
 }
 
 /*********** Global ***********/
-.content {
+.content,
+#leaderboard {
   visibility: hidden;
   z-index: -9;
 }
+
 .content.show {
   visibility: visible;
   z-index: 9;
+}
+
+#leaderboard.show {
+  visibility: visible;
+  z-index: 99;
 }
 /*********** Fin Global ***********/
 
@@ -46,7 +53,60 @@ body {
 #header h1 {
   margin: 20px 0;
 }
+
+#header .leaderboard-btn {
+  position: absolute;
+  top: 50%;
+  left: 75%;
+  transform: translate(-50%, -50%);
+  padding: 7px 10px;
+  border: 1px solid var(--white);
+  border-radius: 10px;
+  cursor: pointer;
+}
 /*********** Fin Header ***********/
+
+/*********** Leaderboard ***********/
+#leaderboard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, .6);
+}
+
+#leaderboard .leaderboard-content {
+  position: relative;
+  width: 500px;
+  height: 600px;
+  background-color: var(--primary-color);
+  border-radius: 7px;
+}
+
+#leaderboard .leaderboard-content .close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--secondary-color);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#leaderboard .leaderboard-content .table {
+  width: 100%;
+  text-align: center;
+  padding: 20px;
+}
+/*********** End Leaderboard ***********/
 
 /*********** Menu Content ***********/
 #menu-content {
