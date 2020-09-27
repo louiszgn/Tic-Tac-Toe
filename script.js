@@ -213,59 +213,61 @@ function checkSuite(line, column) {
 }
 
 function checkCell(thisCell, l, c) {
-  // console.log(`l = ${l}; c = ${c}`);
+  let suite = false;
   let checkedCell = completeCells.find(cell => cell.cell === `c${l}-${c}`);
   if (checkedCell && (checkedCell.cell != thisCell) && completeCells.find(cell => cell.cell === `c${line}-${column}` && cell.player === getCookie("activePlayer"))) {
     let newLine = parseInt(checkedCell.cell.split("")[1]);
     let newColumn = parseInt(checkedCell.cell.split("")[3]);
 
-    if(newLine > l) {
-      if (newColumn > c)
-      {
-        checkSuite(newL + 1, newC + 1);
-        checkSuite(l - 1, c - 1);
+    do {
+      if(newLine > l) {
+        if (newColumn > c)
+        {
+          suite = checkSuite(newL + 1, newC + 1);
+          suite = checkSuite(l - 1, c - 1);
+        }
+        else if (newColumn < c)
+        {
+          suite = checkSuite(newL - 1, newC - 1);
+          suite = checkSuite(l + 1, c + 1);
+        }
+        else {
+          suite = checkSuite(newL - 1, newC);
+          suite = checkSuite(l + 1, c);
+        }
       }
-      else if (newColumn < c)
-      {
-        checkSuite(newL - 1, newC - 1);
-        checkSuite(l + 1, c + 1);
+      else if(newLine < l) {
+        if (newColumn > c)
+        {
+          suite = checkSuite(newL - 1, newC + 1);
+          suite = checkSuite(l + 1, c - 1);
+        }
+        else if (newColumn < c)
+        {
+          suite = checkSuite(newL - 1, newC - 1);
+          suite = checkSuite(l + 1, c + 1);
+        }
+        else {
+          suite = checkSuite(newL - 1, newC);
+          suite = checkSuite(l + 1, c);
+        }
       }
       else {
-        checkSuite(newL - 1, newC);
-        checkSuite(l + 1, c);
+        if (newColumn > c)
+        {
+          suite = checkSuite(newL, newC + 1);
+          suite = checkSuite(l, c - 1);
+        }
+        else if (newColumn < c)
+        {
+          suite = checkSuite(newL, newC - 1);
+          suite = checkSuite(l, c + 1);
+        }
       }
-    }
-    else if(newLine < l) {
-      if (newColumn > c)
-      {
-        checkSuite(newL - 1, newC + 1);
-        checkSuite(l + 1, c - 1);
-      }
-      else if (newColumn < c)
-      {
-        checkSuite(newL - 1, newC - 1);
-        checkSuite(l + 1, c + 1);
-      }
-      else {
-        checkSuite(newL - 1, newC);
-        checkSuite(l + 1, c);
-      }
-    }
-    else {
-      if (newColumn > c)
-      {
-        checkSuite(newL, newC + 1);
-        checkSuite(l, c - 1);
-      }
-      else if (newColumn < c)
-      {
-        checkSuite(newL, newC - 1);
-        checkSuite(l, c + 1);
-      }
-    }
-
-    checkCell(thisCell, newL, newC);
+    } while (!suite);
   }
+
+  if (suite) endGame();
 }
 
 function checkColumn(thisCell, column, l) {
