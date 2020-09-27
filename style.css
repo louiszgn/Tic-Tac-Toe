@@ -214,6 +214,11 @@ body {
 #game-content .players div {
   display: flex;
   align-items: center;
+  padding: 5px 20px;
+  border-radius: 10px;
+}
+#game-content .players div.active {
+  background-color: var(--secondary-color);
 }
 
 #game-content .players div span {
@@ -239,10 +244,22 @@ body {
   width: calc((100% / var(--grid-size)) - calc(10px - var(--grid-size-px)));
   margin-bottom: 10px;
   background-color: var(--black);
+  background-size: 80%;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
   border-radius: 10px;
   cursor: pointer;
 }
+#game-content .grid > div.played:hover {
+  cursor: not-allowed;
+}
 #game-content .grid > div:not(.played):hover {
   background-color: var(--secondary-color);
+}
+#game-content .grid > div.p1 {
+  background-image: url(img/x.png);
+}
+#game-content .grid > div.p2 {
+  background-image: url(img/o.png);
 }
 /*********** Fin Game Content ***********/

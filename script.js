@@ -1,10 +1,4 @@
-// Create player1
-// Create player2 (if not = bot)
-// Select nb players (bind class && bind attr :disable)
-// Create size selector (3 by default) // html range
 // Create matrice of the game (adapt to the size)
-// Create html of party
-// Get onclick by case
 
 // IA
 // fc checkLine
@@ -12,7 +6,6 @@
 // get count of case complete by player 
 
 // End of party
-// Dans localstorage => nom de l'utilisateur + nombre de parties gagnées
 
 let multi = true;
 let style = document.documentElement.style;
@@ -122,6 +115,7 @@ document.querySelector("#menu-content .start-btn").onclick = () => {
     setCookie("player1", player1Input.value);
     setCookie("size", sizeRange.value);
     setCookie("isInGame", "true");
+    setCookie("activePlayer", 1);
 
     checkIsInGame();
   }
@@ -130,6 +124,8 @@ document.querySelector("#menu-content .start-btn").onclick = () => {
 /*********** End Menu ***********/
 
 /*********** Game ***********/
+let nbCompleteCells = 0;
+let completeCells = [];
 const player1Name = document.querySelector("#game-content .players .player-1");
 const player2Name = document.querySelector("#game-content .players .player-2");
 const grid = document.querySelector("#game-content .grid");
@@ -156,19 +152,140 @@ function gameInit() {
   player2Name.querySelector("span").innerHTML = getCookie("player2");
 
   for (let i = 0; i < size; i++) {
-    for (let j = 0; j < size; j ++) {
+    for (let j = 0; j < size; j++) {
       let cell = document.createElement("DIV");
-      cell.classList.add(`${i}-${j}`);
+      cell.classList.add(`c${i}-${j}`);
       grid.appendChild(cell);
+
+      cell.onclick = () => {
+        if (cell.classList.contains("played")) return;
+        let thisCell = cell.classList.value;
+
+        nbCompleteCells++;
+        completeCells.push({cell: thisCell, player: getCookie("activePlayer")});
+        cell.classList.add("played");
+
+        if (getCookie("activePlayer") == 1) cell.classList.add("player1");
+        else cell.classList.add("player2");
+
+        checkWin(thisCell);
+        switchPlayer();
+      }
     }
   }
-
   cellsSize();
+
+  if (getCookie("activePlayer") == 1) player1Name.classList.add("active");
+  else player2Name.classList.add("active");
 }
 
 function cellsSize() {
   let cells = grid.querySelectorAll("div");
   for (let cell of cells) cell.style.height = cell.offsetWidth;
+}
+
+function switchPlayer() {
+  if (getCookie("activePlayer") == 1) {
+    setCookie("activePlayer", 2);
+    player2Name.classList.add("active");
+    player1Name.classList.remove("active");
+
+    if (!multi) player2AI();
+  }
+  else {
+    setCookie("activePlayer", 1);
+    player1Name.classList.add("active");
+    player2Name.classList.remove("active");
+  }
+}
+
+function player2AI() {
+  let size = parseInt(getCookie("size"));
+  let cell = grid.querySelector(`.c${Math.floor(Math.random() * size)}-${Math.floor(Math.random() * size)}`);
+
+  if (cell.classList.contains("played")) player2AI();
+  else setTimeout(() => {cell.click();}, 1000);
+}
+
+function checkSuite(line, column) {
+  if (completeCells.find(cell => cell.cell === `c${line}-${column}` && cell.player === getCookie("activePlayer"))) return true;
+  else return false;
+}
+
+function checkCell(thisCell, l, c) {
+  // console.log(`l = ${l}; c = ${c}`);
+  let checkedCell = completeCells.find(cell => cell.cell === `c${l}-${c}`);
+  if (checkedCell && (checkedCell.cell != thisCell) && completeCells.find(cell => cell.cell === `c${line}-${column}` && cell.player === getCookie("activePlayer"))) {
+    let newLine = parseInt(checkedCell.cell.split("")[1]);
+    let newColumn = parseInt(checkedCell.cell.split("")[3]);
+
+    if(newLine > l) {
+      if (newColumn > c)
+      {
+        checkSuite(newL + 1, newC + 1);
+        checkSuite(l - 1, c - 1);
+      }
+      else if (newColumn < c)
+      {
+        checkSuite(newL - 1, newC - 1);
+        checkSuite(l + 1, c + 1);
+      }
+      else {
+        checkSuite(newL - 1, newC);
+        checkSuite(l + 1, c);
+      }
+    }
+    else if(newLine < l) {
+      if (newColumn > c)
+      {
+        checkSuite(newL - 1, newC + 1);
+        checkSuite(l + 1, c - 1);
+      }
+      else if (newColumn < c)
+      {
+        checkSuite(newL - 1, newC - 1);
+        checkSuite(l + 1, c + 1);
+      }
+      else {
+        checkSuite(newL - 1, newC);
+        checkSuite(l + 1, c);
+      }
+    }
+    else {
+      if (newColumn > c)
+      {
+        checkSuite(newL, newC + 1);
+        checkSuite(l, c - 1);
+      }
+      else if (newColumn < c)
+      {
+        checkSuite(newL, newC - 1);
+        checkSuite(l, c + 1);
+      }
+    }
+
+    checkCell(thisCell, newL, newC);
+  }
+}
+
+function checkColumn(thisCell, column, l) {
+  if (column > 0) for (let c = (column - 1); c <= (column + 1); c++) checkCell(thisCell, l, c);
+  else for (let c = column; c <= (column + 2); c++) checkCell(thisCell, l, c);
+}
+
+function checkWin(thisCell) {
+  if (nbCompleteCells === 9) endGame();
+  else {
+    let line = parseInt(thisCell.split("")[1]);
+    let column = parseInt(thisCell.split("")[3]);
+
+    if(line > 0) for (let l = (line - 1); l <= (line + 1); l++) checkColumn(thisCell, column, l);
+    else for (let l = line; l <= (line + 2); l++) checkColumn(thisCell, column, l);
+  }
+}
+
+function endGame() {
+
 }
 
 window.onresize = () => cellsSize();
