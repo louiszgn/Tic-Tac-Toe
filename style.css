@@ -22,16 +22,19 @@ body {
   justify-content: center;
   color: var(--white);
   background-color: var(--black);
+  /* overflow: hidden; */
 }
 
 /*********** Global ***********/
 .content,
 #leaderboard {
+  position: absolute;
   visibility: hidden;
   z-index: -9;
 }
 
 .content.show {
+  position: initial;
   visibility: visible;
   z-index: 9;
 }
@@ -199,6 +202,47 @@ body {
 
 /*********** Game Content ***********/
 #game-content {
+  width: 50%;
+}
 
+#game-content .players {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 30px;
+}
+
+#game-content .players div {
+  display: flex;
+  align-items: center;
+}
+
+#game-content .players div span {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+#game-content .players div img {
+  max-width: 40px;
+}
+
+#game-content .grid {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 10px;
+  padding-bottom: 0;
+  background-color: var(--primary-color);
+  border-radius: 10px;
+}
+
+#game-content .grid > div {
+  width: calc((100% / var(--grid-size)) - calc(10px - var(--grid-size-px)));
+  margin-bottom: 10px;
+  background-color: var(--black);
+  border-radius: 10px;
+  cursor: pointer;
+}
+#game-content .grid > div:not(.played):hover {
+  background-color: var(--secondary-color);
 }
 /*********** Fin Game Content ***********/

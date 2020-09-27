@@ -5,11 +5,7 @@
 // Create matrice of the game (adapt to the size)
 // Create html of party
 // Get onclick by case
-localStorage.setItem('azdqsdq', '9');
-localStorage.setItem('dqsdz', '3');
-localStorage.setItem('Tom', '2');
-localStorage.setItem('efsdfsd', '40');
-localStorage.setItem('Tofdfm', '20');
+
 // IA
 // fc checkLine
 // fc checkColumn
@@ -19,13 +15,30 @@ localStorage.setItem('Tofdfm', '20');
 // Dans localstorage => nom de l'utilisateur + nombre de parties gagnées
 
 let multi = true;
-let player1 = "";
-let player2 = "";
-let size = 3;
-let isInGame = false;
+let style = document.documentElement.style;
 let leaderboard = Object.keys(localStorage).map(key => { return {"name": key, "score": localStorage.getItem(key)} }).sort((a, b) => b.score - a.score);
 const menuContent = document.querySelector("#menu-content");
 const gameContent = document.querySelector("#game-content");
+
+function getCookie(name) {
+  let value = `; ${document.cookie}`;
+  let parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  else return null;
+}
+
+function setCookie(name, data) {
+  document.cookie = `${name}=${data}; SameSite=Strict`;
+}
+
+function removeCookies() {
+  let res = document.cookie;
+  let multiple = res.split(";");
+  for(cookie of multiple) {
+    let key = cookie.split("=");
+    document.cookie = key[0]+" =; expires = Thu, 01 Jan 1970 00:00:00 UTC";
+  }
+}
 
 /*********** Leaderboard ***********/
 const table = document.querySelector("#leaderboard .table");
@@ -39,7 +52,6 @@ function updateLeaderboard(name, score) {
 }
 
 function pushToLeaderboard(name) {
-  // push to localstorage
   if (localStorage.getItem(name)) {
     let playerScore = parseInt(localStorage.getItem(name)) + 1;
 
@@ -63,31 +75,25 @@ document.querySelector("#leaderboard .close").onclick = () => document.querySele
 /*********** End Leaderboard ***********/
 
 /*********** Menu ***********/
-const reset = document.querySelector("#menu-content .reset-btn");
 const select1 = document.querySelector("#menu-content .select-1");
 const select2 = document.querySelector("#menu-content .select-2");
 const player1Input = document.querySelector("#menu-content .player-1 input");
 const player2Input = document.querySelector("#menu-content .player-2 input");
 const sizeRange = document.querySelector("#menu-content .grid-size input");
 const outputSizeRange = document.querySelector("#menu-content .grid-size span");
-const start = document.querySelector("#menu-content .start-btn");
 
 function setDatas() {
   if (multi) select2.click();
   else select1.click();
 
-  player1Input.value = player1;
-  player2Input.value = player2;
-  sizeRange.value = size;
+  player1Input.value = getCookie("player1") || "";
+  player2Input.value = getCookie("player2") || "";
+  sizeRange.value = getCookie("size") || 3;
   outputSizeRange.innerHTML = sizeRange.value;
 }
 
-reset.onclick = () => {
-  multi = true;
-  player1 = "";
-  player2 = "";
-  size = 3;
-
+document.querySelector("#menu-content .reset-btn").onclick = () => {
+  removeCookies();
   setDatas();
 }
 
@@ -105,18 +111,17 @@ select2.onclick = () => {
   player2Input.disabled = false;
 }
 
-sizeRange.oninput = () => {
-  outputSizeRange.innerHTML = sizeRange.value;
-}
+sizeRange.oninput = () => outputSizeRange.innerHTML = sizeRange.value;
 
-start.onclick = () => {
-  if (((multi && (player1Input.value.lenght > 1) && (player2Input.value.lenght > 1)) || (!multi && (player1Input.value.lenght > 1))) && (sizeRange.value >= 3)) {
-    if (multi) player2 = player2Input.value;
-    else player2 = "TheBot";
+document.querySelector("#menu-content .start-btn").onclick = () => {
+  if (((multi && (player1Input.value.length > 1) && (player2Input.value.length > 1)) || (!multi && (player1Input.value.length > 1))) && (sizeRange.value >= 3)) {
+    if (multi) setCookie("player2", player2Input.value);
+    else setCookie("player2", "LeBot");
     
-    player1 = player1Input.value;
-    size = sizeRange.value;
-    isInGame = true;
+    setCookie("multi", multi);
+    setCookie("player1", player1Input.value);
+    setCookie("size", sizeRange.value);
+    setCookie("isInGame", "true");
 
     checkIsInGame();
   }
@@ -125,16 +130,48 @@ start.onclick = () => {
 /*********** End Menu ***********/
 
 /*********** Game ***********/
+const player1Name = document.querySelector("#game-content .players .player-1");
+const player2Name = document.querySelector("#game-content .players .player-2");
+const grid = document.querySelector("#game-content .grid");
+
 function checkIsInGame() {
-  if (isInGame) {
+  if (getCookie("isInGame")) {
     gameContent.classList.add("show");
     menuContent.classList.remove("show");
+
+    gameInit();
   }
   else {
     menuContent.classList.add("show");
     gameContent.classList.remove("show");
   }
 }
+
+function gameInit() {
+  multi = getCookie("multi");
+  let size = getCookie("size");
+  style.setProperty('--grid-size', size);
+  style.setProperty('--grid-size-px', size + "px");
+  player1Name.querySelector("span").innerHTML = getCookie("player1");
+  player2Name.querySelector("span").innerHTML = getCookie("player2");
+
+  for (let i = 0; i < size; i++) {
+    for (let j = 0; j < size; j ++) {
+      let cell = document.createElement("DIV");
+      cell.classList.add(`${i}-${j}`);
+      grid.appendChild(cell);
+    }
+  }
+
+  cellsSize();
+}
+
+function cellsSize() {
+  let cells = grid.querySelectorAll("div");
+  for (let cell of cells) cell.style.height = cell.offsetWidth;
+}
+
+window.onresize = () => cellsSize();
 /*********** End Game ***********/
 
 /*********** Onload ***********/
