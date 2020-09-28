@@ -1,11 +1,7 @@
-// Create matrice of the game (adapt to the size)
-
 // IA
 // fc checkLine
 // fc checkColumn
-// get count of case complete by player 
-
-// End of party
+// get count of case complete by player
 
 let multi = true;
 let style = document.documentElement.style;
@@ -24,12 +20,14 @@ function setCookie(name, data) {
   document.cookie = `${name}=${data}; SameSite=Strict`;
 }
 
-function removeCookies() {
-  let res = document.cookie;
-  let multiple = res.split(";");
-  for(cookie of multiple) {
-    let key = cookie.split("=");
-    document.cookie = key[0]+" =; expires = Thu, 01 Jan 1970 00:00:00 UTC";
+function removeCookies(name = null) {
+  if (name) document.cookie = `${name} =; expires = Thu, 01 Jan 1970 00:00:00 UTC`;
+  else {
+    let multiple = document.cookie.split(";");
+    for(cookie of multiple) {
+      let key = cookie.split("=");
+      document.cookie = `${key[0]} =; expires = Thu, 01 Jan 1970 00:00:00 UTC`;
+    }
   }
 }
 
@@ -129,6 +127,7 @@ let completeCells = [];
 const player1Name = document.querySelector("#game-content .players .player-1");
 const player2Name = document.querySelector("#game-content .players .player-2");
 const grid = document.querySelector("#game-content .grid");
+const popupWin = document.querySelector("#popup-win");
 
 function checkIsInGame() {
   if (getCookie("isInGame")) {
@@ -155,7 +154,6 @@ function gameInit() {
     for (let j = 0; j < size; j++) {
       let cell = document.createElement("DIV");
       cell.classList.add(`c${i}-${j}`);
-      cell.appendChild(document.createTextNode(`c${i}-${j}`));
       grid.appendChild(cell);
 
       cell.onclick = () => {
@@ -284,7 +282,20 @@ function checkWin(thisCell) {
 }
 
 function endGame() {
-  console.log("end");
+  let winner = (getCookie("activePlayer") == 1) ? getCookie("player1") : getCookie("player2");
+
+  pushToLeaderboard(winner);
+  removeCookies("isInGame");
+  setCookie("activePlayer", 1);
+  
+  document.querySelector("#popup-win .win-content span").innerHTML = winner;
+  popupWin.classList.add("show");
+}
+
+document.querySelector("#popup-win .win-content .return").onclick = () => {
+  grid.innerHTML = "";
+  popupWin.classList.remove("show");
+  checkIsInGame();
 }
 
 window.onresize = () => cellsSize();
