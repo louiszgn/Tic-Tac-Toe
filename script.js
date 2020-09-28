@@ -288,16 +288,14 @@ function checkWin(thisCell) {
 }
 
 function endGame() {
-  let winner = "";
-  if (nbCompleteCells === 9) winner = "Nobody";
-  else {
-    winner = (getCookie("activePlayer") == 1) ? getCookie("player1") : getCookie("player2");
-    pushToLeaderboard(winner);
-  }
+  let winner = (getCookie("activePlayer") == 1) ? getCookie("player1") : getCookie("player2");
+  if (nbCompleteCells != 9) pushToLeaderboard(winner);
+  else winner = "Nobody";
 
   removeCookies("isInGame");
   setCookie("activePlayer", 1);
   completeCells = []; 
+  nbCompleteCells = 0;
 
   document.querySelector("#popup-win .win-content span").innerHTML = winner;
   popupWin.classList.add("show");
