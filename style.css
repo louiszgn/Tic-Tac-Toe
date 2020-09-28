@@ -35,6 +35,7 @@ body {
 /*********** Global ***********/
 .content,
 #leaderboard,
+#screen-blocker,
 #popup-win {
   position: absolute;
   visibility: hidden;
@@ -48,6 +49,7 @@ body {
 }
 
 #leaderboard.show,
+#screen-blocker.show,
 #popup-win.show {
   visibility: visible;
   z-index: 99;
@@ -347,6 +349,14 @@ body {
 }
 #game-content .grid > div.player2 {
   background-image: url(img/o.png);
+}
+
+#screen-blocker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 @media (max-width: 1500px) {

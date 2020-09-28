@@ -3,7 +3,8 @@
 // fc checkColumn
 // get count of case complete by player
 
-let multi = true;
+let size = parseInt(getCookie("size"));
+let multi = (getCookie("multi") === "false") ? false : true;
 let style = document.documentElement.style;
 let leaderboard = Object.keys(localStorage).map(key => { return {"name": key, "score": localStorage.getItem(key)} }).sort((a, b) => b.score - a.score);
 const menuContent = document.querySelector("#menu-content");
@@ -120,6 +121,7 @@ document.querySelector("#menu-content .start-btn").onclick = () => {
     setCookie("size", sizeRange.value);
     setCookie("isInGame", "true");
     setCookie("activePlayer", 1);
+    size = parseInt(getCookie("size"));
 
     checkIsInGame();
   }
@@ -133,6 +135,7 @@ let completeCells = [];
 const player1Name = document.querySelector("#game-content .players .player-1");
 const player2Name = document.querySelector("#game-content .players .player-2");
 const grid = document.querySelector("#game-content .grid");
+const blocker = document.querySelector("#screen-blocker");
 const popupWin = document.querySelector("#popup-win");
 
 function checkIsInGame() {
@@ -150,7 +153,6 @@ function checkIsInGame() {
 
 function gameInit() {
   multi = (getCookie("multi") === "true") ? true : false;
-  let size = getCookie("size");
   style.setProperty('--grid-size', size);
   style.setProperty('--grid-size-px', size + "px");
   player1Name.querySelector("span").innerHTML = getCookie("player1");
@@ -174,7 +176,7 @@ function gameInit() {
         else cell.classList.add("player2");
 
         checkWin(thisCell);
-        switchPlayer();
+        if (getCookie("isInGame")) switchPlayer();
       }
     }
   }
@@ -205,11 +207,15 @@ function switchPlayer() {
 }
 
 function player2AI() {
-  let size = parseInt(getCookie("size"));
+  blocker.classList.add("show");
   let cell = grid.querySelector(`.c${Math.floor(Math.random() * size)}-${Math.floor(Math.random() * size)}`);
 
-  if (cell.classList.contains("played")) player2AI();
-  else setTimeout(() => {cell.click();}, 1000);
+  if (nbCompleteCells == (size * size)) return endGame();
+  else if (cell.classList.contains("played")) return player2AI();
+  else setTimeout(() => {
+    cell.click();
+    blocker.classList.remove("show");
+  }, 500);
 }
 
 function checkSuite(line, column, thisCell) {
@@ -277,20 +283,19 @@ function checkColumn(thisCell, column, l) {
 }
 
 function checkWin(thisCell) {
-  let size = parseInt(getCookie("size"));
-  if (nbCompleteCells === (size * size)) endGame();
-  else {
+  if (nbCompleteCells != (size * size)) {
     let line = parseInt(thisCell.split("")[1]);
     let column = parseInt(thisCell.split("")[3]);
 
-    if(line > 0) for (let l = (line - 1); l <= (line + 1); l++) checkColumn(thisCell, column, l);
+    if (line > 0) for (let l = (line - 1); l <= (line + 1); l++) checkColumn(thisCell, column, l);
     else for (let l = line; l <= (line + 1); l++) checkColumn(thisCell, column, l);
   }
+  else endGame();
 }
 
 function endGame() {
   let winner = (getCookie("activePlayer") == 1) ? getCookie("player1") : getCookie("player2");
-  if (nbCompleteCells != 9) pushToLeaderboard(winner);
+  if (nbCompleteCells != (size * size)) pushToLeaderboard(winner);
   else winner = "Nobody";
 
   removeCookies("isInGame");
