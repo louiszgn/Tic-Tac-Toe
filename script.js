@@ -89,6 +89,7 @@ function setDatas() {
 }
 
 document.querySelector("#menu-content .reset-btn").onclick = () => {
+  multi = true;
   removeCookies();
   setDatas();
 }
@@ -148,7 +149,7 @@ function checkIsInGame() {
 }
 
 function gameInit() {
-  multi = getCookie("multi");
+  multi = (getCookie("multi") === "true") ? true : false;
   let size = getCookie("size");
   style.setProperty('--grid-size', size);
   style.setProperty('--grid-size-px', size + "px");
@@ -287,12 +288,17 @@ function checkWin(thisCell) {
 }
 
 function endGame() {
-  let winner = (getCookie("activePlayer") == 1) ? getCookie("player1") : getCookie("player2");
+  let winner = "";
+  if (nbCompleteCells === 9) winner = "Nobody";
+  else {
+    winner = (getCookie("activePlayer") == 1) ? getCookie("player1") : getCookie("player2");
+    pushToLeaderboard(winner);
+  }
 
-  pushToLeaderboard(winner);
   removeCookies("isInGame");
   setCookie("activePlayer", 1);
-  
+  completeCells = []; 
+
   document.querySelector("#popup-win .win-content span").innerHTML = winner;
   popupWin.classList.add("show");
 }
