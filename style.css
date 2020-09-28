@@ -256,10 +256,10 @@ body {
 #game-content .grid > div:not(.played):hover {
   background-color: var(--secondary-color);
 }
-#game-content .grid > div.p1 {
+#game-content .grid > div.player1 {
   background-image: url(img/x.png);
 }
-#game-content .grid > div.p2 {
+#game-content .grid > div.player2 {
   background-image: url(img/o.png);
 }
 /*********** Fin Game Content ***********/

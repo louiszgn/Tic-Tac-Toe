@@ -155,6 +155,7 @@ function gameInit() {
     for (let j = 0; j < size; j++) {
       let cell = document.createElement("DIV");
       cell.classList.add(`c${i}-${j}`);
+      cell.appendChild(document.createTextNode(`c${i}-${j}`));
       grid.appendChild(cell);
 
       cell.onclick = () => {
@@ -207,72 +208,68 @@ function player2AI() {
   else setTimeout(() => {cell.click();}, 1000);
 }
 
-function checkSuite(line, column) {
-  if (completeCells.find(cell => cell.cell === `c${line}-${column}` && cell.player === getCookie("activePlayer"))) return true;
+function checkSuite(line, column, thisCell) {
+  let ee = completeCells.find(cell => cell.cell === `c${line}-${column}` && cell.player === getCookie("activePlayer")) || false;
+  if (ee && ee.cell != thisCell) return true;
   else return false;
 }
 
 function checkCell(thisCell, l, c) {
-  let suite = false;
-  let checkedCell = completeCells.find(cell => cell.cell === `c${l}-${c}`);
-  if (checkedCell && (checkedCell.cell != thisCell) && completeCells.find(cell => cell.cell === `c${line}-${column}` && cell.player === getCookie("activePlayer"))) {
-    let newLine = parseInt(checkedCell.cell.split("")[1]);
-    let newColumn = parseInt(checkedCell.cell.split("")[3]);
-
-    do {
-      if(newLine > l) {
-        if (newColumn > c)
-        {
-          suite = checkSuite(newL + 1, newC + 1);
-          suite = checkSuite(l - 1, c - 1);
-        }
-        else if (newColumn < c)
-        {
-          suite = checkSuite(newL - 1, newC - 1);
-          suite = checkSuite(l + 1, c + 1);
-        }
-        else {
-          suite = checkSuite(newL - 1, newC);
-          suite = checkSuite(l + 1, c);
-        }
+  let checkedCell = completeCells.find(cell => cell.cell === `c${l}-${c}` && cell.player === getCookie("activePlayer"));
+  if (checkedCell && (checkedCell.cell != thisCell)) {
+    let newLine = parseInt(thisCell.split("")[1]);
+    let newColumn = parseInt(thisCell.split("")[3]);
+    
+    if (newLine > l) {
+      if (newColumn > c)
+      {
+        if (checkSuite(newLine + 1, newColumn + 1, thisCell)) return endGame();
+        if (checkSuite(l - 1, c - 1, thisCell)) return endGame();
       }
-      else if(newLine < l) {
-        if (newColumn > c)
-        {
-          suite = checkSuite(newL - 1, newC + 1);
-          suite = checkSuite(l + 1, c - 1);
-        }
-        else if (newColumn < c)
-        {
-          suite = checkSuite(newL - 1, newC - 1);
-          suite = checkSuite(l + 1, c + 1);
-        }
-        else {
-          suite = checkSuite(newL - 1, newC);
-          suite = checkSuite(l + 1, c);
-        }
+      else if (newColumn < c)
+      {
+        if (checkSuite(newLine - 1, newColumn - 1, thisCell)) return endGame();
+        if (checkSuite(l + 1, c + 1, thisCell)) return endGame();
       }
       else {
-        if (newColumn > c)
-        {
-          suite = checkSuite(newL, newC + 1);
-          suite = checkSuite(l, c - 1);
-        }
-        else if (newColumn < c)
-        {
-          suite = checkSuite(newL, newC - 1);
-          suite = checkSuite(l, c + 1);
-        }
+        if (checkSuite(newLine + 1, newColumn, thisCell)) return endGame();
+        if (checkSuite(l - 1, c, thisCell)) return endGame();
       }
-    } while (!suite);
+    }
+    else if (newLine < l) {
+      if (newColumn > c)
+      {
+        if (checkSuite(newLine - 1, newColumn + 1, thisCell)) return endGame();
+        if (checkSuite(l + 1, c - 1, thisCell)) return endGame();
+      }
+      else if (newColumn < c)
+      {
+        if (checkSuite(newLine - 1, newColumn - 1, thisCell)) return endGame();
+        if (checkSuite(l + 1, c + 1, thisCell)) return endGame();
+      }
+      else {
+        if (checkSuite(newLine - 1, newColumn, thisCell)) return endGame();
+        if (checkSuite(l + 1, c, thisCell)) return endGame();
+      }
+    }
+    else {
+      if (newColumn > c)
+      {
+        if (checkSuite(newLine, newColumn + 1, thisCell)) return endGame();
+        if (checkSuite(l, c - 1, thisCell)) return endGame();
+      }
+      else if (newColumn < c)
+      {
+        if (checkSuite(newLine, newColumn - 1, thisCell)) return endGame();
+        if (checkSuite(l, c + 1, thisCell)) return endGame();
+      }
+    }
   }
-
-  if (suite) endGame();
 }
 
 function checkColumn(thisCell, column, l) {
   if (column > 0) for (let c = (column - 1); c <= (column + 1); c++) checkCell(thisCell, l, c);
-  else for (let c = column; c <= (column + 2); c++) checkCell(thisCell, l, c);
+  else for (let c = column; c <= (column + 1); c++) checkCell(thisCell, l, c);
 }
 
 function checkWin(thisCell) {
@@ -282,12 +279,12 @@ function checkWin(thisCell) {
     let column = parseInt(thisCell.split("")[3]);
 
     if(line > 0) for (let l = (line - 1); l <= (line + 1); l++) checkColumn(thisCell, column, l);
-    else for (let l = line; l <= (line + 2); l++) checkColumn(thisCell, column, l);
+    else for (let l = line; l <= (line + 1); l++) checkColumn(thisCell, column, l);
   }
 }
 
 function endGame() {
-
+  console.log("end");
 }
 
 window.onresize = () => cellsSize();
