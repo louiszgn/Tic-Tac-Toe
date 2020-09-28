@@ -167,7 +167,7 @@ function gameInit() {
       cell.onclick = () => {
         if (cell.classList.contains("played")) return;
         let thisCell = cell.classList.value;
-
+        
         nbCompleteCells++;
         completeCells.push({cell: thisCell, player: getCookie("activePlayer")});
         cell.classList.add("played");
@@ -233,45 +233,45 @@ function checkCell(thisCell, l, c) {
     if (newLine > l) {
       if (newColumn > c)
       {
-        if (checkSuite(newLine + 1, newColumn + 1, thisCell)) return endGame();
-        if (checkSuite(l - 1, c - 1, thisCell)) return endGame();
+        if (checkSuite(newLine + 1, newColumn + 1, thisCell)) return endGame(true);
+        if (checkSuite(l - 1, c - 1, thisCell)) return endGame(true);
       }
       else if (newColumn < c)
       {
-        if (checkSuite(newLine + 1, newColumn - 1, thisCell)) return endGame();
-        if (checkSuite(l - 1, c + 1, thisCell)) return endGame();
+        if (checkSuite(newLine + 1, newColumn - 1, thisCell)) return endGame(true);
+        if (checkSuite(l - 1, c + 1, thisCell)) return endGame(true);
       }
       else {
-        if (checkSuite(newLine + 1, newColumn, thisCell)) return endGame();
-        if (checkSuite(l - 1, c, thisCell)) return endGame();
+        if (checkSuite(newLine + 1, newColumn, thisCell)) return endGame(true);
+        if (checkSuite(l - 1, c, thisCell)) return endGame(true);
       }
     }
     else if (newLine < l) {
       if (newColumn > c)
       {
-        if (checkSuite(newLine - 1, newColumn + 1, thisCell)) return endGame();
-        if (checkSuite(l + 1, c - 1, thisCell)) return endGame();
+        if (checkSuite(newLine - 1, newColumn + 1, thisCell)) return endGame(true);
+        if (checkSuite(l + 1, c - 1, thisCell)) return endGame(true);
       }
       else if (newColumn < c)
       {
-        if (checkSuite(newLine - 1, newColumn - 1, thisCell)) return endGame();
-        if (checkSuite(l + 1, c + 1, thisCell)) return endGame();
+        if (checkSuite(newLine - 1, newColumn - 1, thisCell)) return endGame(true);
+        if (checkSuite(l + 1, c + 1, thisCell)) return endGame(true);
       }
       else {
-        if (checkSuite(newLine - 1, newColumn, thisCell)) return endGame();
-        if (checkSuite(l + 1, c, thisCell)) return endGame();
+        if (checkSuite(newLine - 1, newColumn, thisCell)) return endGame(true);
+        if (checkSuite(l + 1, c, thisCell)) return endGame(true);
       }
     }
     else {
       if (newColumn > c)
       {
-        if (checkSuite(newLine, newColumn + 1, thisCell)) return endGame();
-        if (checkSuite(l, c - 1, thisCell)) return endGame();
+        if (checkSuite(newLine, newColumn + 1, thisCell)) return endGame(true);
+        if (checkSuite(l, c - 1, thisCell)) return endGame(true);
       }
       else if (newColumn < c)
       {
-        if (checkSuite(newLine, newColumn - 1, thisCell)) return endGame();
-        if (checkSuite(l, c + 1, thisCell)) return endGame();
+        if (checkSuite(newLine, newColumn - 1, thisCell)) return endGame(true);
+        if (checkSuite(l, c + 1, thisCell)) return endGame(true);
       }
     }
   }
@@ -283,21 +283,20 @@ function checkColumn(thisCell, column, l) {
 }
 
 function checkWin(thisCell) {
-  if (nbCompleteCells != (size * size)) {
-    let line = parseInt(thisCell.split("")[1]);
-    let column = parseInt(thisCell.split("")[3]);
+  let line = parseInt(thisCell.split("")[1]);
+  let column = parseInt(thisCell.split("")[3]);
 
-    if (line > 0) for (let l = (line - 1); l <= (line + 1); l++) checkColumn(thisCell, column, l);
-    else for (let l = line; l <= (line + 1); l++) checkColumn(thisCell, column, l);
-  }
-  else endGame();
+  if (line > 0) for (let l = (line - 1); l <= (line + 1); l++) checkColumn(thisCell, column, l);
+  else for (let l = line; l <= (line + 1); l++) checkColumn(thisCell, column, l);
+
+  if (nbCompleteCells === (size * size)) endGame();
 }
 
-function endGame() {
+function endGame(suite = false) {
   let winner = (getCookie("activePlayer") == 1) ? getCookie("player1") : getCookie("player2");
-  if (nbCompleteCells != (size * size)) pushToLeaderboard(winner);
+  if ((nbCompleteCells != (size * size)) || suite) pushToLeaderboard(winner);
   else winner = "Nobody";
-
+  
   removeCookies("isInGame");
   setCookie("activePlayer", 1);
   completeCells = []; 
