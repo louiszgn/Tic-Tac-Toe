@@ -232,8 +232,8 @@ function checkCell(thisCell, l, c) {
       }
       else if (newColumn < c)
       {
-        if (checkSuite(newLine - 1, newColumn - 1, thisCell)) return endGame();
-        if (checkSuite(l + 1, c + 1, thisCell)) return endGame();
+        if (checkSuite(newLine + 1, newColumn - 1, thisCell)) return endGame();
+        if (checkSuite(l - 1, c + 1, thisCell)) return endGame();
       }
       else {
         if (checkSuite(newLine + 1, newColumn, thisCell)) return endGame();
@@ -277,7 +277,8 @@ function checkColumn(thisCell, column, l) {
 }
 
 function checkWin(thisCell) {
-  if (nbCompleteCells === 9) endGame();
+  let size = parseInt(getCookie("size"));
+  if (nbCompleteCells === (size * size)) endGame();
   else {
     let line = parseInt(thisCell.split("")[1]);
     let column = parseInt(thisCell.split("")[3]);
