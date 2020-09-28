@@ -22,21 +22,26 @@ body {
   justify-content: center;
   color: var(--white);
   background-color: var(--black);
+  /* overflow: hidden; */
 }
 
 /*********** Global ***********/
 .content,
-#leaderboard {
+#leaderboard,
+#popup-win {
+  position: absolute;
   visibility: hidden;
   z-index: -9;
 }
 
 .content.show {
+  position: initial;
   visibility: visible;
   z-index: 9;
 }
 
-#leaderboard.show {
+#leaderboard.show,
+#popup-win.show {
   visibility: visible;
   z-index: 99;
 }
@@ -199,6 +204,101 @@ body {
 
 /*********** Game Content ***********/
 #game-content {
+  width: 50%;
+}
 
+#game-content .players {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 30px;
+}
+
+#game-content .players div {
+  display: flex;
+  align-items: center;
+  padding: 5px 20px;
+  border-radius: 10px;
+}
+#game-content .players div.active {
+  background-color: var(--secondary-color);
+}
+
+#game-content .players div span {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+#game-content .players div img {
+  max-width: 40px;
+}
+
+#game-content .grid {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 10px;
+  padding-bottom: 0;
+  background-color: var(--primary-color);
+  border-radius: 10px;
+}
+
+#game-content .grid > div {
+  width: calc((100% / var(--grid-size)) - calc(10px - var(--grid-size-px)));
+  margin-bottom: 10px;
+  background-color: var(--black);
+  background-size: 80%;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  border-radius: 10px;
+  cursor: pointer;
+}
+#game-content .grid > div.played:hover {
+  cursor: not-allowed;
+}
+#game-content .grid > div:not(.played):hover {
+  background-color: var(--secondary-color);
+}
+#game-content .grid > div.player1 {
+  background-image: url(img/x.png);
+}
+#game-content .grid > div.player2 {
+  background-image: url(img/o.png);
 }
 /*********** Fin Game Content ***********/
+
+/*********** Popup Win ***********/
+#popup-win {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, .6);
+}
+
+#popup-win .win-content {
+  position: relative;
+  padding: 30px 40px;
+  background-color: var(--primary-color);
+  border-radius: 10px;
+}
+
+#popup-win .win-content h2 {
+  font-size: 40px;
+}
+
+#popup-win .win-content .return {
+  position: relative;
+  width: fit-content;
+  letter-spacing: 1px;
+  padding: 7px 20px;
+  background-color: var(--green);
+  border-radius: 10px;
+  margin: auto;
+  margin-top: 15px;
+  cursor: pointer;
+}
+/*********** Fin Popup Win ***********/
