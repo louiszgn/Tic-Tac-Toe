@@ -61,6 +61,11 @@ function pushToLeaderboard(name) {
   }
 }
 
+document.querySelector("#leaderboard .clear").onclick = () => {
+  localStorage.clear();
+  table.innerHTML = "<tr><th>Name</th><th>Score</th></tr>";
+};
+
 document.querySelector("#header .leaderboard-btn").onclick = () => document.querySelector("#leaderboard").classList.toggle("show");
 document.querySelector("#leaderboard .close").onclick = () => document.querySelector("#leaderboard").classList.toggle("show");
 /*********** End Leaderboard ***********/
